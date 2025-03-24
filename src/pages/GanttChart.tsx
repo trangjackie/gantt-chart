@@ -11,6 +11,7 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const GanttChart: React.FC = () => {
+    // Các task cần expanded false khi khởi tạo để tránh lỗi hiển thị bảng
     const [tasks, setTasks] = useState<Task[]>([
         { id: '1', subject: 'Project Kickoff', type: 'milestone', status: 'Done', startDate: dayjs('2025-03-01'), finishDate: dayjs('2025-03-01') },
         { id: '2', subject: 'Requirement Gathering', type: 'project', status: 'In Progress', startDate: dayjs('2025-03-02'), finishDate: dayjs('2025-03-10'), expanded: false, children: [
@@ -56,7 +57,7 @@ const GanttChart: React.FC = () => {
     { key: 'duration', label: 'Duration', visible: true },
   ]);
   const [filters, setFilters] = useState<FilterConfig>({});
-  const [sort, setSort] = useState<SortConfig>({ key: 'startDate', direction: 'asc' });
+  const [sort, setSort] = useState<SortConfig>({ key: 'id', direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.Month);
   const [tableWidth, setTableWidth] = useState(900); // Độ rộng bảng ban đầu
@@ -84,12 +85,33 @@ const GanttChart: React.FC = () => {
   const handleTaskChange = (task: GanttTask) => {
     const updateTask = (taskList: Task[]): Task[] =>
       taskList.map(t => {
-        if (t.id === task.id) return { ...t, startDate: dayjs(task.start), finishDate: dayjs(task.end) };
+        if (t.id === task.id) {
+          let newStartDate = dayjs(task.start);
+          let newFinishDate = dayjs(task.end);
+
+          // Tìm task cha nếu có parentId
+          if (t.parentId) {
+            const parentTask = tasks.find(p => p.id === t.parentId);
+            if (parentTask && newStartDate.isBefore(parentTask.startDate)) {
+              newStartDate = parentTask.startDate; // Giữ startDate không nhỏ hơn startDate của task cha
+            }
+          }
+
+          // Đảm bảo finishDate không nhỏ hơn startDate
+          if (newFinishDate.isBefore(newStartDate)) {
+            newFinishDate = newStartDate; // Cập nhật finishDate nếu nhỏ hơn startDate
+          }
+
+          return { ...t, startDate: newStartDate, finishDate: newFinishDate };
+        }
+
         if (t.children) return { ...t, children: updateTask(t.children) };
         return t;
       });
+
     setTasks(updateTask(tasks));
-  };
+};
+
 
   const handleExpand = (taskId: string, expanded: boolean) => {
     const updateTask = (taskList: Task[]): Task[] =>
@@ -116,24 +138,36 @@ const flattenTasks = (taskList: Task[]): Task[] => {
 };
 
 
-  const filteredTasks = flattenTasks(tasks)
-    .filter(task => 
-      (!filters.type || task.type === filters.type) &&
-      (!filters.status || task.status === filters.status)
-    )
-    .sort((a, b) => {
-      const key = sort.key;
-      const direction = sort.direction === 'asc' ? 1 : -1;
-      if (key === 'duration') {
-        const aDuration = a.finishDate ? a.finishDate.diff(a.startDate, 'day') : 0;
-        const bDuration = b.finishDate ? b.finishDate.diff(b.startDate, 'day') : 0;
-        return (aDuration - bDuration) * direction;
-      }
-      if (key === 'startDate' || key === 'finishDate') {
-        return ((a[key]?.unix() || 0) - (b[key]?.unix() || 0)) * direction;
-      }
-      return String(a[key]).localeCompare(String(b[key])) * direction;
-    });
+const filteredTasks = flattenTasks(tasks)
+.filter(task => 
+  (!filters.type || task.type === filters.type) &&
+  (!filters.status || task.status === filters.status)
+)
+.sort((a, b) => {
+  const key = sort.key;
+  const direction = sort.direction === 'asc' ? 1 : -1;
+
+  // Nếu key là 'id', so sánh id như là số
+  if (key === 'id') {
+    const aId = parseInt(a[key], 10);
+    const bId = parseInt(b[key], 10);
+    return (aId - bId) * direction;
+  }
+
+  // Sắp xếp theo duration
+  if (key === 'duration') {
+    const aDuration = a.finishDate ? a.finishDate.diff(a.startDate, 'day') : 0;
+    const bDuration = b.finishDate ? b.finishDate.diff(b.startDate, 'day') : 0;
+    return (aDuration - bDuration) * direction;
+  }
+
+  // Sắp xếp theo startDate hoặc finishDate
+  if (key === 'startDate' || key === 'finishDate') {
+    return ((a[key]?.unix() || 0) - (b[key]?.unix() || 0)) * direction;
+  }
+
+  return String(a[key]).localeCompare(String(b[key])) * direction;
+});
 
     
 
