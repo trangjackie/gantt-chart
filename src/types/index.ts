@@ -10,7 +10,12 @@ export interface Task {
   children?: Task[];
   parentId?: string;
   expanded?: boolean;
+  assignee?: string;
 }
+
+export type TaskCalendarProps = {
+  initialDate?: Dayjs;
+};
 
 export interface ColumnConfig {
   key: keyof Task | 'duration';
