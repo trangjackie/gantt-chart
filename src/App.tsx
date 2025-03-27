@@ -1,9 +1,12 @@
 import React from 'react';
-import GanttChart from './pages/GanttChart';
-
+import KanbanBoard from './pages/KanbanBoard';
 
 const App: React.FC = () => {
-  return <GanttChart />;
+  return (
+    <div className="app">
+      <KanbanBoard />
+    </div>
+  );
 };
 
 export default App;
