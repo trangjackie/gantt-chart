@@ -1,0 +1,21 @@
+.sidebar {
+    background: #001529;
+  }
+  
+  .kanban-board {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .kanban-column {
+    flex: 1;
+    margin: 0 8px;
+    background: #f0f2f5;
+    padding: 16px;
+    border-radius: 4px;
+  }
+  
+  .kanban-column h3 {
+    margin-bottom: 16px;
+    text-align: center;
+  }

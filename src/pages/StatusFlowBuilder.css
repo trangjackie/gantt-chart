@@ -1,0 +1,133 @@
+.flow-canvas-container {
+    padding: 20px;
+    height: 100vh;
+  }
+  
+  .canvas-layout {
+    display: flex;
+    height: 60vh;
+    gap: 20px;
+  }
+  
+  .status-palette {
+    width: 200px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    overflow-y: auto;
+  }
+  
+  .status-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .status-item {
+    padding: 8px 12px;
+    background: white;
+    border-radius: 4px;
+    cursor: grab;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+  }
+  
+  .status-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  
+  .flow-canvas {
+    flex: 1;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    background: white;
+  }
+  
+  .status-node {
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 2px solid;
+    background: white;
+  }
+  
+  .node-tag {
+    font-size: 14px;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  
+  .rules-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fafafa;
+    border-radius: 8px;
+  }
+  
+  .empty-rules {
+    text-align: center;
+    padding: 20px;
+    color: rgba(0,0,0,0.45);
+  }
+  
+  .rules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .rule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .rule-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .arrow {
+    color: rgba(0,0,0,0.45);
+    font-size: 16px;
+  }
+  
+  .conditions-badge {
+    font-size: 12px;
+    padding: 2px 8px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    color: rgba(0,0,0,0.65);
+  }
+  
+  .rule-actions {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .rule-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #d9d9d9;
+  }
+  .react-flow__handle {
+    width: 10px;
+    height: 10px;
+    background: #555;
+    border: 2px solid white;
+    border-radius: 50%;
+  }
+  
+  .react-flow__handle:hover {
+    width: 12px;
+    height: 12px;
+  }
